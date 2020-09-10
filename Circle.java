@@ -1,0 +1,221 @@
+import java.awt.*; 
+import objectdraw.*;
+import java.util.*;
+///////////////////////////////////////////////////////////////////////////////
+//                
+// Title:            (Circle.java)
+// Semester:         (CS8B) Fall 2018
+//
+// Author:           (Matthew Roth)
+// Email:            (mrroth@ucsd.edu)
+// CS Login:         (cs8bfds)
+// Lecturer's Name:  (Prof. Paul Cao; TA's - Grace Chen, Alberto, Cheng, Emily,
+//                     Godwin, Henry, Hensen, Hilda, Lavanya, Nishil, Sneha)
+// 
+// Class Desc:        The Circle class will create a circle on the canvas 
+//                    and it will either be filled in with color or empty.
+//                    The circle also has a bulls eye function that will 
+//                    draw a bulls eye on the canvas. 
+//
+///////////////////////////////////////////////////////////////////////////////
+/**
+ * The Circle class will create a circle on the canvas 
+ * and it will either be filled in with color or empty.
+ * The circle also has a bulls eye function that will 
+ * draw a bulls eye on the canvas.
+ * */           
+public class Circle extends Shape{
+  //the center of the circle as a point object
+  private Point center;
+  //the radius of the circle as an int 
+  private int radius;
+
+
+  /**
+   * the constructor will take two arguments 
+   * for Point and one for the radius. 
+   * Will implicitly call the shape toString 
+   * and inherit the name 
+   * @param center the center of circle
+   * @param radius the radius of circle 
+   * */
+  public Circle(Point center, int radius){
+    super();
+    this.center = (new Point(center)); 
+    this.radius = radius;
+  }
+
+  /**
+   * the constructor will take three arguments as
+   * Point, radius and String name 
+   * @param center the center of circle
+   * @param radius the radius of circle
+   * @param name the name of circle 
+   * */
+  public Circle(Point center, int radius, String name){    
+    //call the super with the string as a parameter
+    super(name);
+    this.center = (new Point(center));
+    this.radius = radius;
+  }
+
+  /**
+   * the deep copy constructor with no name 
+   * @param originalCircle the original circle to copy
+   * */
+  public Circle(Circle originalCircle){
+    super();
+    //deep copy these variables 
+    this.center = new Point(originalCircle.getCenter());
+    this.radius = (originalCircle.getRadius());
+  }
+
+  /**
+   * the deep copy constructor taking a 
+   * String as an argument for the name
+   * @param originalCircle the o.g. circle object
+   * @param name the name of circle
+   * */
+  public Circle(Circle originalCircle, String name){
+    //call the super with the name as argument 
+    super(name);
+    //call this constructor with argument for Circle
+    this.center = new Point(originalCircle.getCenter());
+    this.radius = (originalCircle.getRadius());
+  }
+
+  /**
+   * the no args constructor default center is 0,0
+   * and the default radius is 0
+   * */
+  public Circle(){
+    this(new Point(), 0);    
+    
+  }
+
+  /**
+   * the getCenter method will return the 
+   * center of the circle as a point 
+   * @return point the Point object 
+   * */
+  public Point getCenter(){
+    //return the centr of circle Point object
+    return this.center;
+  }
+
+  /**
+   * the getRadius method will return the radius
+   * of the circle as an int
+   * @return radius the radius of circle
+   * */
+  public int getRadius(){
+    return this.radius;
+  }
+
+  /**
+   * the toString for the circle class 
+   * will override the super toString
+   * @return String the string representation of Circle
+   * */
+  public String toString(){
+
+    return "Circle Object's Name: " + getShapeName()
+      + "\nCenter: Point: " + "(" + center.getX() + "," + center.getY()
+      + ")" + "\nRadius: " + this.radius + "\n";
+  }
+
+  /**
+   * the draw method will override the draw method
+   *  in the Shape class with different parameters
+   *  @param canvas the canvas to create 
+   *  @param color the color of circle
+   *  @param fill to fill or not to fill
+   *
+   * */
+  public void draw(DrawingCanvas canvas, Color color, boolean fill){
+    final int DOUBLE = 2;
+    if(fill){
+    //create a FilledOval object that will create a circle 
+    FilledOval circle = new FilledOval(
+                      this.getCenter().getX() - radius,
+                      this.getCenter().getY() - radius,
+                      DOUBLE*getRadius(),
+                      DOUBLE*getRadius(),
+                      canvas);
+    //if the color argument is some color then set the circle color 
+    //to the parameter 
+    if( color != null) circle.setColor( color );
+    else                    
+      circle.setColor( Color.BLACK );
+    //if the parameter fill is set to false then create an empty
+    //framed circle 
+    }else if(!fill){
+      FramedOval emptyCircle = new FramedOval(this.getCenter().getX() -radius,
+                                              this.getCenter().getY() - radius,
+                                              DOUBLE*getRadius(),
+     
+                                              DOUBLE*getRadius(),
+                                              canvas);
+      if(color != null)
+        emptyCircle.setColor(color);
+      else 
+        emptyCircle.setColor(Color.BLACK);
+    }
+
+  }
+
+  /**
+   * private helper method to get the Color of 
+   * the bulls eye circle 
+   * @return color the color 
+   * */
+  private Color getColor(){
+    Random random = new Random();
+    final int maxColor = 255;
+    Color randomColor = new Color(random.nextInt(maxColor),
+        random.nextInt(maxColor), random.nextInt(maxColor));
+    return randomColor;
+  }
+
+
+  /**
+   * the drawBullsEye method will use the Circle class
+   * to draw a Bulls eye figure on the canvas. Taking
+   * in three arguments as a DrawCanvas, boolean and n 
+   * @para, canvas the canvas to draw
+   * @param fill true false fill option
+   * @param n the int to how many iterations
+   * */
+  public void drawBullsEye(DrawingCanvas canvas, boolean fill, int n){
+    final int DELAY = 25;
+    final int DECREASE_RADIUS = 10;
+    //create a color object with a random color from a call to the getColor
+    //method
+    Color color = getColor();
+    //generate the first circle 
+    draw(canvas, color, true);
+    //the counter for circles in each call to bulls eye
+    int count = 1;
+    //begin the recursive block, if n == 0 return nothing
+    if(n == 0)
+      return;
+    //if n == 1 then make one smaller circle 
+    else if(n == 1){
+      color = getColor();
+      Circle lastBullsEye = new Circle(this.getCenter(),
+          this.getRadius() - DECREASE_RADIUS*count);
+      pause(DELAY);
+      lastBullsEye.draw(canvas, color, true);
+    }
+    //if n > 1 then call recursively to the bullsEye method until n is 1
+    else{
+      color = getColor();
+      Circle bullsEye = new Circle(this.getCenter(), 
+         this. getRadius() - DECREASE_RADIUS*count );
+      bullsEye.draw(canvas, color, true);
+      count++;
+      pause(DELAY);
+      bullsEye.drawBullsEye(canvas, true, n-1);
+    }
+  }
+}

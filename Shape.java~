@@ -1,0 +1,48 @@
+//import the libraries for drawing shapes 
+import java.awt.*;
+import objectdraw.*;
+
+public abstract class Shape extends ActiveObject{
+
+  private String shapeName; // the shape identification name
+
+  /**
+   * constructor to one argument a String and 
+   * assigns to the instance "shape"
+   * @param shapeName the shape to assign to
+   * */
+  public Shape(String shapeName){
+    this.shapeName = shapeName;
+  }
+
+  /**
+   * no args constructor to set the shapeName
+   * to default "NoName"
+   * */
+  public Shape(){
+    this("NoName");
+  }
+
+  /**
+   * the getShape name method is a getter method 
+   * to return the String shapeNme 
+   * @return shapeName the name of shape
+   * */
+  public String getShapeName(){
+    return this.shapeName;
+  }
+
+  /**
+   * the draw method is an abstract method taking 
+   * three arguments as DrawingCanvas, Color and boolean
+   * @param theCanvas the canvas to draw
+   * @param shapeColor the color 
+   * @param isFilled is the shape filled 
+   * */
+  public void draw(DrawingCanvas theCanvas, Color shapeColor, boolean isFilled){
+  }
+
+}
+
+
+

@@ -1,0 +1,235 @@
+import java.awt.*;
+import objectdraw.*;
+import java.util.*;
+///////////////////////////////////////////////////////////////////////////////
+//                
+// Title:            (Square.java)
+// Semester:         (CS8B) Fall 2018
+//
+// Author:           (Matthew Roth)
+// Email:            (mrroth@ucsd.edu)
+// CS Login:         (cs8bfds)
+// Lecturer's Name:  (Prof. Paul Cao; TA's - Grace Chen, Alberto, Cheng, Emily,
+//                     Godwin, Henry, Hensen, Hilda, Lavanya, Nishil, Sneha)
+// 
+// Class Desc:        The square class will draw a square on the canvas and 
+//                    the square can be filled or left empty depending on the 
+//                    parameters
+//
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+* The square class will draw a square on the canvas and 
+* the square can be filled or left empty depending on the 
+* parameters
+**/
+public class Square extends Shape{
+  //the private instance variables to hold the side of the square
+  //and the upper left point of the square
+  private int side;
+  private Point upperLeft;
+
+  /**
+   * constructor to take three arguments for the
+   * x, y for the Point and the side as int
+   * @param x the x coordinate
+   * @param y the y coordinate
+   * @param side the side as int
+   * */
+  public Square(int x, int y, int side){
+    this.upperLeft = new Point(x, y);
+    this.side = side;
+  }
+
+  /**
+   * the constructor will take four arguments
+   * the x, y coordinates for point, the side as 
+   * an int, and the String name 
+   * @param x the coordinate x
+   * @param y the coordinate y
+   * @param side the side of square
+   * @param name the name of shape
+   * */
+  public Square(int x, int y, int side, String name){
+    super(name);
+    this.upperLeft = new Point(x, y);
+    this.side = side;
+  }
+
+  /**
+   * the constructor will take two arguments
+   * a Point object and a side as an int
+   * @param upperLeft the point for upperleft corner
+   * @param side the side of square 
+   * */
+  public Square(Point upperLeft, int side){
+    this.upperLeft = new Point(upperLeft);
+    this.side = side;
+  }
+
+  /**
+   * the constructor will take three arguments 
+   * a Point object, a side as int and a String 
+   * for the name of shape 
+   * @param upperLeft the point for upperleft corner
+   * @param side the side of square
+   * @param name the name of shape 
+   * */
+  public Square(Point upperLeft, String name){
+    super(name);
+    this.upperLeft = new Point(upperLeft);
+    this.side = side;
+  }
+
+  /**
+   * the constructor to take one argument the 
+   * originalSquare is a deep copy constructor
+   * @param originalSquare the Square object to copy
+   * */
+  public Square(Square originalSquare){
+    this.upperLeft = new Point(originalSquare.getUpperLeft());
+    this.side = originalSquare.getSide();
+  }
+
+  /**
+   * the constructor will take two arguments the
+   * originalSquare as a deep copy object and the
+   * name as a String 
+   * @param originalSquare the Square object to copy
+   * @param name the name of shape 
+   * */
+  public Square(Square originalSquare, String name){
+    super(name);
+    this.upperLeft = new Point(originalSquare.getUpperLeft());
+    this.side = getSide();
+  }
+
+  /**
+   * the no args constructor 
+   * */
+  public Square(){
+    this.upperLeft = new Point();
+    this.side = 0;
+  }
+
+  /**
+   * the getSide method will return the side
+   * as an int 
+   * @return side the side of square 
+   * */
+  public int getSide(){
+    return this.side;
+  }
+
+  /**
+   * the getUpperLeft method will return the 
+   * Point associated with the upper left corner 
+   * of the square 
+   * @return upperLeft the upper left corner
+   * */
+  public Point getUpperLeft(){
+    return this.upperLeft;
+  }
+
+  /**
+   * the toString method will return a String
+   * representation of the Square class with the
+   * name, point upper left, and the side length
+   * @return String 
+   * */
+  public String toString(){
+
+    return "Square Object's Name: " + this.getShapeName() +
+      "\n" + "UpperLeft: " + getUpperLeft() + "\n"
+      + "Side: " + getSide();
+  }
+
+  /**
+   * the draw method will override the draw 
+   * method inherited from shape 
+   * @param canvas the canvas to create 
+   * @para, color the color of the square
+   * @param fill true or false fill status 
+   * */
+  public void draw(DrawingCanvas canvas, Color color, boolean fill){
+    //if the parameter is fill set true, then fill the square 
+    if(fill){ 
+    FilledRect square = new FilledRect(
+        getUpperLeft().getX(),
+        getUpperLeft().getY(),
+        side,
+        side,
+        canvas);
+    //set the color to the parameter 
+    if(color != null)
+      square.setColor(color);
+    else square.setColor(Color.BLACK);
+    }
+    //if the fill is not true and its false then create an empty square 
+    else if(!fill){
+      FramedRect emptySquare = new FramedRect(getUpperLeft().getX(),
+          getUpperLeft().getY(), side, side,canvas);
+    }
+
+ }
+/**
+ * the getColor method will create a 
+ * random Color object for random color
+ * to be filled in each square 
+ * @return randomColor the color to fill
+ * */
+ private Color getColor(){
+    Random random = new Random();
+    final int maxColor = 255;
+    Color randomColor = new Color(random.nextInt(maxColor),
+        random.nextInt(maxColor), random.nextInt(maxColor));
+    return randomColor;
+  }
+
+ /**
+  * the drawGrid method will create a grid of squares 
+  * taking in three arguments for DrawingCanvas, boolean
+  * and int 
+  * @param canvas the canvas to draw on
+  * @param fill true/false
+  * @param n the iterations
+  * */
+ public void drawGrid(DrawingCanvas canvas, boolean fill, int n){
+   final int DELAY = 25;
+   //if the n is 1 then draw one square 
+   if (n == 1){
+     Square finalSquare = new Square(this.getUpperLeft(), this.getSide());
+     finalSquare.draw(canvas, getColor(), true);
+   }
+   //if the n is greater then 1, then perform the following sequence of 
+   //creating four new square objects and drawing them on the canvas in a
+   //grid like pattern 
+  else {
+
+      Square square1 = new Square((this.getUpperLeft().getX() + this.getSide()),
+          (this.getUpperLeft().getY() - this.getSide()), this.getSide());
+      square1.draw(canvas, getColor(), true);
+      Square square2 = new Square((this.getUpperLeft().getX() - this.getSide()),
+          (this.getUpperLeft().getY() + this.getSide()), this.getSide());
+      square2.draw(canvas, getColor(), true);
+      Square square3 = new Square((this.getUpperLeft().getX() - this.getSide()),
+          (this.getUpperLeft().getY() - this.getSide()), this.getSide());
+      square3.draw(canvas, getColor(), true);
+      Square square4 = new Square((this.getUpperLeft().getX() + this.getSide()),
+          (this.getUpperLeft().getY() + this.getSide()), this.getSide());
+      square4.draw(canvas, getColor(), true);
+      //recursively call the drawGrid method four times again for each n value 
+      pause(DELAY);
+      square1.drawGrid(canvas, true, (n-1));
+      pause(DELAY);      
+      square2.drawGrid(canvas, true, (n-1));
+      pause(DELAY);      
+      square3.drawGrid(canvas, true, (n-1));
+      pause(DELAY);      
+      square4.drawGrid(canvas, true, (n-1));
+
+    }
+
+ }
+
+}
